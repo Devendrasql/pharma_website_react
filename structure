@@ -1,0 +1,38 @@
+pharmacy-app/
+├── package.json
+├── vite.config.ts
+├── tailwind.config.js
+├── postcss.config.js
+├── tsconfig.json
+├── tsconfig.app.json
+├── tsconfig.node.json
+├── eslint.config.js
+├── index.html
+├── src/
+│   ├── main.tsx
+│   ├── App.tsx
+│   ├── index.css
+│   ├── vite-env.d.ts
+│   ├── components/
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   ├── ProductCard.tsx
+│   │   ├── CategoryFilter.tsx
+│   │   ├── Cart.tsx
+│   │   ├── OrderForm.tsx
+│   │   └── AuthModal.tsx
+│   ├── hooks/
+│   │   ├── useAuth.ts
+│   │   └── useCart.ts
+│   ├── lib/
+│   │   ├── supabase.ts
+│   │   └── database.types.ts
+│   ├── types/
+│   │   └── index.ts
+│   ├── utils/
+│   │   └── currency.ts
+│   └── data/
+│       └── products.ts
+└── supabase/
+    └── migrations/
+        └── 20250715151356_square_shore.sql
