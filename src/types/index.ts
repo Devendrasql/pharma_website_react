@@ -1,4 +1,15 @@
+import { ReactNode } from "react";
+
 export interface Medicine {
+  total_reviews: ReactNode;
+  mrp: boolean;
+  discount_percentage: ReactNode;
+  pack_size: string | null;
+  storage_instructions: string;
+  how_to_use: string;
+  side_effects: string;
+  precautions: string;
+  average_rating: ReactNode;
   id: string;
   name: string;
   description: string | null;

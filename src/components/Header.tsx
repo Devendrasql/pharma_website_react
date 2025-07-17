@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, ShoppingCart, Phone, MapPin, User, LogOut } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
@@ -6,16 +7,13 @@ import { useCart } from '../hooks/useCart';
 interface HeaderProps {
   onCartClick: () => void;
   onAuthClick: () => void;
-  searchTerm: string;
-  onSearchChange: (term: string) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ 
   onCartClick,
-  onAuthClick,
-  searchTerm, 
-  onSearchChange 
+  onAuthClick
 }) => {
+  const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { itemCount } = useCart();
 
@@ -35,7 +33,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <div className="flex items-center space-x-1">
               <MapPin className="h-4 w-4" />
-              <span>Jaipur, Rajasthan, India</span>
+              <span>Mumbai, Maharashtra, India</span>
             </div>
           </div>
           <div className="flex items-center space-x-4">
@@ -45,6 +43,12 @@ export const Header: React.FC<HeaderProps> = ({
                   <User className="h-4 w-4" />
                   <span>{user.email}</span>
                 </div>
+                <button
+                  onClick={() => navigate('/orders')}
+                  className="flex items-center space-x-1 hover:text-blue-200"
+                >
+                  <span>My Orders</span>
+                </button>
                 <button
                   onClick={handleSignOut}
                   className="flex items-center space-x-1 hover:text-blue-200"
@@ -71,29 +75,26 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-2">
+            <button onClick={() => navigate('/')} className="flex items-center space-x-2">
             <div className="bg-blue-600 text-white p-2 rounded-lg">
               <div className="h-8 w-8 flex items-center justify-center font-bold text-lg">
-                M
+                Rx
               </div>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">Medidukan</h1>
+              <h1 className="text-2xl font-bold text-gray-800">HealthMart</h1>
               <p className="text-sm text-gray-600">Your Trusted Pharmacy</p>
             </div>
+            </button>
           </div>
 
-          {/* Search bar */}
-          <div className="flex-1 max-w-2xl mx-8">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <input
-                type="text"
-                placeholder="Search for medicines, vitamins, and health products..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={searchTerm}
-                onChange={(e) => onSearchChange(e.target.value)}
-              />
-            </div>
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center space-x-6 flex-1 justify-center">
+            <a href="#medicines" className="text-gray-700 hover:text-blue-600 font-medium">Medicines</a>
+            <a href="#health-checkup" className="text-gray-700 hover:text-blue-600 font-medium">Health Checkup</a>
+            <a href="#lab-tests" className="text-gray-700 hover:text-blue-600 font-medium">Lab Tests</a>
+            <a href="#articles" className="text-gray-700 hover:text-blue-600 font-medium">Health Articles</a>
+            <a href="#offers" className="text-gray-700 hover:text-blue-600 font-medium">Offers</a>
           </div>
 
           {/* Cart */}
