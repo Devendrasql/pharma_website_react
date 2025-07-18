@@ -1,261 +1,229 @@
-import React, { useState, useEffect } from 'react';
-import { X, ChevronDown, ChevronUp } from 'lucide-react';
-import { SearchFilters, Medicine } from '../../types';
-import { displayPrice } from '../../utils/currency';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  Phone, 
+  Mail, 
+  MapPin, 
+  Clock, 
+  Facebook, 
+  Twitter, 
+  Instagram, 
+  Youtube,
+  Shield,
+  Truck,
+  CreditCard,
+  Award
+} from 'lucide-react';
 
-interface ProductFiltersProps {
-  filters: SearchFilters;
-  onFilterChange: (filters: SearchFilters) => void;
-  products: Medicine[];
-}
-
-export const ProductFilters: React.FC<ProductFiltersProps> = ({
-  filters,
-  onFilterChange,
-  products
-}) => {
-  const [expandedSections, setExpandedSections] = useState({
-    price: true,
-    manufacturer: true,
-    prescription: true,
-    rating: true,
-  });
-
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
-  const [manufacturers, setManufacturers] = useState<string[]>([]);
-
-  useEffect(() => {
-    // Extract unique manufacturers from products
-    const uniqueManufacturers = [...new Set(products.map(p => p.manufacturer).filter(Boolean))];
-    setManufacturers(uniqueManufacturers);
-
-    // Set price range based on products
-    if (products.length > 0) {
-      const prices = products.map(p => p.price);
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
-      setPriceRange([minPrice, maxPrice]);
-    }
-  }, [products]);
-
-  const toggleSection = (section: keyof typeof expandedSections) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
-
-  const handlePriceChange = (min: number, max: number) => {
-    onFilterChange({
-      ...filters,
-      priceRange: [min, max]
-    });
-  };
-
-  const handleManufacturerChange = (manufacturer: string) => {
-    onFilterChange({
-      ...filters,
-      manufacturer: filters.manufacturer === manufacturer ? undefined : manufacturer
-    });
-  };
-
-  const handlePrescriptionChange = (required: boolean) => {
-    onFilterChange({
-      ...filters,
-      prescriptionRequired: filters.prescriptionRequired === required ? undefined : required
-    });
-  };
-
-  const handleRatingChange = (rating: number) => {
-    onFilterChange({
-      ...filters,
-      rating: filters.rating === rating ? undefined : rating
-    });
-  };
-
-  const clearFilters = () => {
-    onFilterChange({});
-  };
-
-  const hasActiveFilters = Object.values(filters).some(value => value !== undefined);
+export const Footer: React.FC = () => {
+  const currentYear = new Date().getFullYear();
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-800">Filters</h3>
-        {hasActiveFilters && (
-          <button
-            onClick={clearFilters}
-            className="text-sm text-blue-600 hover:text-blue-700 flex items-center space-x-1"
-          >
-            <X className="h-4 w-4" />
-            <span>Clear All</span>
-          </button>
-        )}
+    <footer className="bg-gray-900 text-white">
+      {/* Trust Indicators */}
+      <div className="bg-gray-800 py-8">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div className="flex flex-col items-center">
+              <Shield className="h-8 w-8 text-blue-400 mb-2" />
+              <h4 className="font-semibold mb-1">100% Authentic</h4>
+              <p className="text-sm text-gray-400">Genuine products only</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Truck className="h-8 w-8 text-green-400 mb-2" />
+              <h4 className="font-semibold mb-1">Fast Delivery</h4>
+              <p className="text-sm text-gray-400">Same day delivery available</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <CreditCard className="h-8 w-8 text-purple-400 mb-2" />
+              <h4 className="font-semibold mb-1">Secure Payment</h4>
+              <p className="text-sm text-gray-400">Multiple payment options</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Award className="h-8 w-8 text-yellow-400 mb-2" />
+              <h4 className="font-semibold mb-1">Licensed Pharmacy</h4>
+              <p className="text-sm text-gray-400">Government approved</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="space-y-6">
-        {/* Price Range */}
-        <div>
-          <button
-            onClick={() => toggleSection('price')}
-            className="flex items-center justify-between w-full text-left font-medium text-gray-800 mb-3"
-          >
-            <span>Price Range</span>
-            {expandedSections.price ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </button>
-          
-          {expandedSections.price && (
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="number"
-                  placeholder="Min"
-                  value={filters.priceRange?.[0] || ''}
-                  onChange={(e) => {
-                    const min = parseFloat(e.target.value) || 0;
-                    handlePriceChange(min, filters.priceRange?.[1] || priceRange[1]);
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                />
-                <span className="text-gray-500">to</span>
-                <input
-                  type="number"
-                  placeholder="Max"
-                  value={filters.priceRange?.[1] || ''}
-                  onChange={(e) => {
-                    const max = parseFloat(e.target.value) || priceRange[1];
-                    handlePriceChange(filters.priceRange?.[0] || priceRange[0], max);
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                />
+      {/* Main Footer */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Company Info */}
+          <div>
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="bg-gradient-to-r from-blue-600 to-green-500 text-white p-3 rounded-xl">
+                <div className="h-8 w-8 flex items-center justify-center font-bold text-xl">
+                  H+
+                </div>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold">HealthMart</h3>
+                <p className="text-sm text-gray-400">Your Trusted Pharmacy</p>
+              </div>
+            </div>
+            <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+              Your trusted online pharmacy providing quality medications and health products 
+              with professional service across India.
+            </p>
+            <div className="flex space-x-4">
+              <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
+                <Facebook className="h-5 w-5" />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
+                <Twitter className="h-5 w-5" />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-pink-400 transition-colors">
+                <Instagram className="h-5 w-5" />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-red-400 transition-colors">
+                <Youtube className="h-5 w-5" />
+              </a>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <Link to="/category/all" className="text-gray-400 hover:text-white transition-colors">
+                  All Medicines
+                </Link>
+              </li>
+              <li>
+                <Link to="/category/pain-relief" className="text-gray-400 hover:text-white transition-colors">
+                  Pain Relief
+                </Link>
+              </li>
+              <li>
+                <Link to="/category/vitamins" className="text-gray-400 hover:text-white transition-colors">
+                  Vitamins & Supplements
+                </Link>
+              </li>
+              <li>
+                <Link to="/category/beauty-care" className="text-gray-400 hover:text-white transition-colors">
+                  Beauty Care
+                </Link>
+              </li>
+              <li>
+                <Link to="/category/baby-care" className="text-gray-400 hover:text-white transition-colors">
+                  Baby Care
+                </Link>
+              </li>
+              <li>
+                <Link to="/track-order" className="text-gray-400 hover:text-white transition-colors">
+                  Track Order
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Customer Service */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">Customer Service</h4>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <Link to="/orders" className="text-gray-400 hover:text-white transition-colors">
+                  My Orders
+                </Link>
+              </li>
+              <li>
+                <Link to="/reminders" className="text-gray-400 hover:text-white transition-colors">
+                  Medicine Reminders
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  Help & Support
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  Return Policy
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  Terms & Conditions
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">Contact Us</h4>
+            <div className="space-y-4 text-sm">
+              <div className="flex items-start space-x-3">
+                <Phone className="h-5 w-5 text-blue-400 mt-0.5" />
+                <div>
+                  <p className="text-white font-medium">+91 98765 43210</p>
+                  <p className="text-gray-400">24/7 Customer Support</p>
+                </div>
               </div>
               
-              <div className="text-xs text-gray-500">
-                Range: {displayPrice(priceRange[0])} - {displayPrice(priceRange[1])}
+              <div className="flex items-start space-x-3">
+                <Mail className="h-5 w-5 text-blue-400 mt-0.5" />
+                <div>
+                  <p className="text-white font-medium">info@healthmart.in</p>
+                  <p className="text-gray-400">Email Support</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <MapPin className="h-5 w-5 text-blue-400 mt-0.5" />
+                <div>
+                  <p className="text-white font-medium">Mumbai, Maharashtra</p>
+                  <p className="text-gray-400">India</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <Clock className="h-5 w-5 text-blue-400 mt-0.5" />
+                <div>
+                  <p className="text-white font-medium">24/7 Service</p>
+                  <p className="text-gray-400">Always Available</p>
+                </div>
               </div>
             </div>
-          )}
-        </div>
-
-        {/* Manufacturer */}
-        <div>
-          <button
-            onClick={() => toggleSection('manufacturer')}
-            className="flex items-center justify-between w-full text-left font-medium text-gray-800 mb-3"
-          >
-            <span>Manufacturer</span>
-            {expandedSections.manufacturer ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </button>
-          
-          {expandedSections.manufacturer && (
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {manufacturers.map((manufacturer) => (
-                <label key={manufacturer} className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={filters.manufacturer === manufacturer}
-                    onChange={() => handleManufacturerChange(manufacturer)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">{manufacturer}</span>
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Prescription Required */}
-        <div>
-          <button
-            onClick={() => toggleSection('prescription')}
-            className="flex items-center justify-between w-full text-left font-medium text-gray-800 mb-3"
-          >
-            <span>Prescription</span>
-            {expandedSections.prescription ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </button>
-          
-          {expandedSections.prescription && (
-            <div className="space-y-2">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={filters.prescriptionRequired === false}
-                  onChange={() => handlePrescriptionChange(false)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">Over the Counter</span>
-              </label>
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={filters.prescriptionRequired === true}
-                  onChange={() => handlePrescriptionChange(true)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">Prescription Required</span>
-              </label>
-            </div>
-          )}
-        </div>
-
-        {/* Rating */}
-        <div>
-          <button
-            onClick={() => toggleSection('rating')}
-            className="flex items-center justify-between w-full text-left font-medium text-gray-800 mb-3"
-          >
-            <span>Customer Rating</span>
-            {expandedSections.rating ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </button>
-          
-          {expandedSections.rating && (
-            <div className="space-y-2">
-              {[4, 3, 2, 1].map((rating) => (
-                <label key={rating} className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={filters.rating === rating}
-                    onChange={() => handleRatingChange(rating)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <div className="flex items-center space-x-1">
-                    <div className="flex">
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <span
-                          key={i}
-                          className={`text-sm ${
-                            i < rating ? 'text-yellow-400' : 'text-gray-300'
-                          }`}
-                        >
-                          ★
-                        </span>
-                      ))}
-                    </div>
-                    <span className="text-sm text-gray-700">& above</span>
-                  </div>
-                </label>
-              ))}
-            </div>
-          )}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Bottom Bar */}
+      <div className="border-t border-gray-800">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="text-sm text-gray-400">
+              <p>&copy; {currentYear} HealthMart India. All rights reserved.</p>
+              <p className="mt-1">Licensed Pharmacy | Reg. No: DL-ABC-123456</p>
+            </div>
+            
+            <div className="flex items-center space-x-6 text-sm text-gray-400">
+              <span>We Accept:</span>
+              <div className="flex items-center space-x-2">
+                <div className="bg-white text-gray-800 px-2 py-1 rounded text-xs font-semibold">
+                  UPI
+                </div>
+                <div className="bg-white text-gray-800 px-2 py-1 rounded text-xs font-semibold">
+                  COD
+                </div>
+                <div className="bg-white text-gray-800 px-2 py-1 rounded text-xs font-semibold">
+                  Cards
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 };
