@@ -17,3 +17,14 @@ export const formatIndianNumber = (num: number): string => {
 export const displayPrice = (price: number): string => {
   return formatCurrency(price);
 };
+
+// Calculate discount percentage
+export const calculateDiscountPercentage = (originalPrice: number, salePrice: number): number => {
+  if (originalPrice <= salePrice) return 0;
+  return Math.round(((originalPrice - salePrice) / originalPrice) * 100);
+};
+
+// Format price range
+export const formatPriceRange = (min: number, max: number): string => {
+  return `${formatCurrency(min)} - ${formatCurrency(max)}`;
+};
